@@ -1,0 +1,191 @@
+# The closed part of the tree: region -> attribute -> classes.
+#
+#   chunk_sec     length of the chunks the region is annotated and routed on
+#   scope         constant = decided once per clip | local = decided per chunk
+#   multi         several classes may hold at once (multiple-choice attribute)
+#   leaf: open    the annotator may add a free-text leaf (1-3 words) under the class it chooses
+#   leaf_hint     what the leaf should describe (shown to the annotator)
+#   na_hint       when the attribute does not apply (shown to the annotator)
+#
+# Classes are descriptive, never numeric (fast tempo, not 125 bpm).
+
+regions:
+  speech:
+    chunk_sec: 3.0
+    attributes:
+      gender:
+        scope: constant
+        values: [male voice, female voice]
+      age_group:
+        scope: constant
+        values: [child, young adult, middle-aged adult, elderly adult]
+      emotion:
+        scope: local
+        leaf: open
+        leaf_hint: "the specific manner of delivery in 1-3 words of your own, ONLY if something specific is audible; otherwise leave it empty"
+        values: [angry, happy, sad, neutral, fearful, disgusted, surprised]
+      language:
+        scope: constant
+        leaf: open
+        leaf_hint: "the name of the language, one word (for example swahili)"
+        values: [western european, eastern european, "central asian, middle eastern and north african",
+                 sub-saharan african, south asian, south-east asian, "chinese, japanese and korean"]
+      num_speakers:
+        scope: constant
+        values: [one speaker, two speakers, three or more speakers]
+      speaking_style:
+        scope: local
+        leaf: open
+        values: [read speech, conversational speech, shouting, whispering, singing, laughing speech, crying speech,
+                 public address]
+      scenario:
+        scope: constant
+        leaf: open
+        values: [phone call, lecture or talk, interview, news broadcast, public announcement, argument,
+                 casual conversation, customer service, sports commentary, storytelling, advertisement, meeting,
+                 voice assistant interaction]
+      topic:
+        scope: constant
+        leaf: open
+        values: [politics, sports, weather, health, technology, finance, education, travel, food, entertainment,
+                 family and relationships, work, shopping, science, religion, crime and law, nature and animals,
+                 daily chores, music and arts, other topic]
+      intent:
+        scope: local
+        leaf: open
+        values: [asking a question, giving an instruction, complaining, apologising, agreeing, disagreeing, greeting,
+                 informing, persuading, joking, warning, thanking]
+      channel:
+        scope: constant
+        leaf: open
+        values: [telephone quality, studio quality, outdoor recording, reverberant room, noisy background,
+                 broadcast quality]
+      accent_origin:
+        scope: constant
+        leaf: open
+        leaf_hint: "the accent or variety, 1-3 words (for example scottish english, indian english, mexican spanish)"
+        values: [native accent of the language, regional accent, foreign accent]
+      speaker_role:
+        scope: constant
+        leaf: open
+        leaf_hint: "the role in 1-3 words (for example football commentator, flight attendant, yoga instructor)"
+        values: [broadcaster or presenter, teacher or lecturer, performer, service worker, official or authority,
+                 professional expert, family member or friend, customer or member of the public, child at play]
+      voice_quality:
+        scope: constant
+        leaf: open
+        leaf_hint: "1-3 words of your own for an audible peculiarity of the voice, ONLY if there is one; otherwise leave it empty"
+        values: [clear and fluent, disfluent, strained or hoarse, breathy or whispery, slurred, trembling, monotone]
+  music:
+    chunk_sec: 10.0
+    attributes:
+      genre:
+        scope: constant
+        leaf: open
+        values: [rock, pop, hip-hop, electronic, metal, country, reggae, blues, jazz, classical, opera, folk,
+                 world music, ambient, soundtrack, disco, gospel, funk or soul, latin]
+      instrument:
+        scope: local
+        multi: true
+        leaf: open
+        values: [acoustic guitar, electric guitar, bass guitar, violin, cello, harp, piano, organ, synthesizer, flute,
+                 clarinet, saxophone, trumpet, trombone, drum kit, hand drums, cymbals, bells, accordion, harmonica,
+                 banjo, orchestral strings, other plucked or folk instrument]
+      ensemble_size:
+        scope: constant
+        values: [solo instrument, duo, small ensemble, full band, orchestra]
+      vocals:
+        scope: local
+        leaf: open
+        values: [no vocals, male vocals, female vocals, choir, rap vocals, mixed vocals]
+      tempo:
+        scope: constant
+        values: [slow tempo, moderate tempo, fast tempo, very fast tempo]
+      meter:
+        scope: constant
+        values: [duple meter, triple meter, compound meter, irregular meter, free rhythm]
+      mode:
+        scope: constant
+        values: [major key, minor key]
+      texture:
+        scope: constant
+        leaf: open
+        values: [single melodic line, melody with accompaniment, several independent lines, dense layered texture,
+                 sparse texture, rhythm only]
+      melody:
+        scope: local
+        leaf: open
+        values: [stepwise melody, leaping melody, repetitive motif, ascending line, descending line, improvised line,
+                 no clear melody]
+      mood:
+        scope: constant
+        leaf: open
+        leaf_hint: "1-3 words of your own for the specific mood, ONLY if it is clear; otherwise leave it empty"
+        values: [energetic, calm, melancholic, joyful, tense, romantic, dark, triumphant, playful, dreamy]
+      production:
+        scope: constant
+        leaf: open
+        values: [live performance, studio recording, lo-fi recording, amateur recording, heavily processed]
+      era_culture:
+        scope: constant
+        leaf: open
+        values: [western classical tradition, latin american, african, south asian, east asian, middle eastern, celtic,
+                 modern western popular, early twentieth century, baroque]
+  sound:
+    chunk_sec: 3.0
+    attributes:
+      event:
+        scope: local
+        multi: true
+        leaf: open
+        leaf_hint: "the everyday name of that exact sound source and action, 1-3 plain words of your own"
+        values: [human non-speech, animal, machine or vehicle, natural element, household object, tool, alarm or signal,
+                 musical sound]
+        # an expert label that names an AudioSet class is placed under the first class below whose list
+        # holds the AudioSet class itself or one of its ontology ancestors
+        audioset_kind:
+          - [[Animal], animal]
+          - [[Alarm, Siren, Bell, Telephone, "Beep, bleep", Whistle, Buzzer, Vehicle horn, car horn, honking, Foghorn], alarm or signal]
+          - [[Vehicle, Engine, Mechanisms, Mechanical fan, Air conditioning, Printer, Sewing machine, Cash register, Pump (liquid)], machine or vehicle]
+          - [[Tools, Power tool], tool]
+          - [["Domestic sounds, home sounds", Door, Glass, Wood, "Dishes, pots, and pans", Cutlery, silverware, Typing, Writing, Clock], household object]
+          - [[Natural sounds, Wind, Water, Thunderstorm, Fire, Liquid], natural element]
+          - [[Respiratory sounds, Human locomotion, Digestive, Hands, Heart sounds, heartbeat, Human group actions, Laughter, Crying, sobbing, Cough, Sneeze, Whistling, Screaming], human non-speech]
+      action_material:
+        scope: local
+        leaf: open
+        na_hint: "how an OBJECT or MACHINE sound is produced; answer \"none\" for voices, animal calls and alarms"
+        values: [impact, friction or scraping, liquid flow, air flow, combustion, engine rotation, electrical hum,
+                 breaking, footsteps, rattling]
+      scene:
+        scope: constant
+        leaf: open
+        values: [kitchen, office, restaurant, shopping mall, airport, metro station, vehicle interior, home interior,
+                 street with traffic, pedestrian street, park, forest, beach or waterside, farm, construction site,
+                 stadium or crowd, public square, shop or store, place of worship, school or classroom,
+                 hospital or clinic, sports venue, harbor or boat, laboratory or workshop]
+      activity:
+        scope: constant
+        leaf: open
+        leaf_hint: "the specific human activity in 1-3 words of your own, ONLY if it is evident; otherwise leave it empty"
+        values: [cooking or eating, cleaning or housework, sport or exercise, travelling or driving,
+                 construction or repair, office or desk work, playing or gaming, personal care, caring for animals,
+                 celebration or ceremony, shopping or trading, no human activity]
+      weather:
+        scope: constant
+        leaf: open
+        leaf_hint: 1-3 words of your own for the weather sound you actually hear; leave it empty when no weather is audible
+        values: [rain, thunderstorm, windy, calm and dry, snow or ice, not audible]
+      num_sources:
+        scope: constant
+        values: [one sound source, two sound sources, several sound sources]
+      proximity:
+        scope: local
+        values: [close to the microphone, at a distance, approaching, receding]
+  cross:
+    chunk_sec: 3.0
+    attributes:
+      families_present:
+        scope: local
+        multi: true
+        values: [speech present, music present, environmental sound present, silence]

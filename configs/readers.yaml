@@ -1,0 +1,33 @@
+# The 26 frozen readers of the paper. `template` is the prompt template selected on 100 development items per benchmark
+# (l2r/reason/reader.py); drop it to run the selection again.
+#   four_bit       4-bit NF4 quantization
+#   answer_prefix  the reply is started with " Answer: (" (readers that do not answer with the letter alone)
+#   generate       the reader reasons first: its answer is generated and parsed
+
+readers:
+  falcon3-10b:        {model: tiiuae/Falcon3-10B-Instruct, template: fewshot}
+  gpt-oss-20b:        {model: openai/gpt-oss-20b, template: ours, generate: true}
+  llama-2-13b:        {model: meta-llama/Llama-2-13b-chat-hf, template: ours, answer_prefix: true}
+  llama-2-7b:         {model: meta-llama/Llama-2-7b-chat-hf, template: ours, answer_prefix: true}
+  llama-3.1-8b:       {model: meta-llama/Llama-3.1-8B-Instruct, template: ours}
+  llama-3.3-70b:      {model: meta-llama/Llama-3.3-70B-Instruct, template: ours, four_bit: true}
+  mistral-7b:         {model: mistralai/Mistral-7B-Instruct-v0.3, template: ours}
+  mistral-small-24b:  {model: mistralai/Mistral-Small-24B-Instruct-2501, template: fewshot}
+  olmo-2-13b:         {model: allenai/OLMo-2-1124-13B-Instruct, template: fewshot}
+  phi-3.5-mini:       {model: microsoft/Phi-3.5-mini-instruct, template: ours}
+  phi-4:              {model: microsoft/phi-4, template: fewshot}
+  qwen2.5-0.5b:       {model: Qwen/Qwen2.5-0.5B-Instruct, template: fewshot}
+  qwen2.5-1.5b:       {model: Qwen/Qwen2.5-1.5B-Instruct, template: ours}
+  qwen2.5-3b:         {model: Qwen/Qwen2.5-3B-Instruct, template: fewshot}
+  qwen2.5-7b:         {model: Qwen/Qwen2.5-7B-Instruct, template: ours}
+  qwen2.5-14b:        {model: Qwen/Qwen2.5-14B-Instruct, template: ours}
+  qwen2.5-32b:        {model: Qwen/Qwen2.5-32B-Instruct, template: ours}
+  qwen2.5-72b:        {model: Qwen/Qwen2.5-72B-Instruct, template: fewshot, four_bit: true}
+  qwen3-4b:           {model: Qwen/Qwen3-4B-Instruct-2507, template: ours}
+  qwen3-8b:           {model: Qwen/Qwen3-8B, template: ours}
+  qwen3-14b:          {model: Qwen/Qwen3-14B, template: ours}
+  qwen3-30b-a3b:      {model: Qwen/Qwen3-30B-A3B-Instruct-2507, template: fewshot}
+  qwen3-32b:          {model: Qwen/Qwen3-32B, template: fewshot}
+  smollm2-1.7b:       {model: HuggingFaceTB/SmolLM2-1.7B-Instruct, template: ours}
+  vicuna-7b:          {model: lmsys/vicuna-7b-v1.5, template: ours, answer_prefix: true}
+  vicuna-13b:         {model: lmsys/vicuna-13b-v1.5, template: native, answer_prefix: true}

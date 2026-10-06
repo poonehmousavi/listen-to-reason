@@ -1,0 +1,178 @@
+# Listen-to-Reason configuration. Paths are relative to the repository root.
+
+seed: 42
+
+paths:
+  data: data                  # datasets and benchmarks (layout in the README)
+  work: work                  # everything the pipeline generates (chunks, features, label tables, contexts, results)
+  checkpoints: checkpoints    # the tree, the trained heads and downloaded encoder weights
+
+# Models, by Hugging Face id (a local path works too).
+models:
+  annotator: Qwen/Qwen3-Omni-30B-A3B-Instruct          # audio LLM that fills the annotation template (tree construction only)
+  tree_llm: meta-llama/Llama-3.3-70B-Instruct           # text LLM that proposes leaf merges (tree construction only)
+  asr: openai/whisper-large-v3                          # transcript given to the reader
+  text_embedder: sentence-transformers/all-MiniLM-L6-v2
+  reader: Qwen/Qwen2.5-7B-Instruct                      # any instruction-tuned text LLM
+  checkpoints: poonehmousavi/listen-to-reason           # the tree and the trained heads of the paper (python -m l2r.checkpoints)
+
+# Frozen encoders (never trained). Most are fetched from the Hugging Face hub by id on first use.
+encoders:
+  batch_size: 16
+  clap: {enable_fusion: false}                          # LAION-CLAP, default checkpoint
+  muq_mulan: {model_id: OpenMuQ/MuQ-MuLan-large}
+  whisper: {model_id: openai/whisper-base}
+  emotion2vec: {model_id: emotion2vec/emotion2vec_plus_large, hub: hf}
+  wavlm_sv: {model_id: microsoft/wavlm-base-plus-sv}
+  vggsound: {source: Ubenwa/sb-ecapa-vggsound, dir: pretrained/vggsound_ecapa}    # teacher of the sound heads (training only)
+  # The next three are downloaded by hand: `source` says where, the PATH/TO placeholders are where you put the files
+  # (relative to paths.checkpoints, or absolute). `python -m l2r.checkpoints --verify` checks them.
+  panns:
+    source: https://zenodo.org/records/3987831                                   # Cnn14_DecisionLevelMax_mAP=0.385.pth
+    labels_source: https://storage.googleapis.com/us_audioset/youtube_corpus/v1/csv/class_labels_indices.csv
+    weights: PATH/TO/Cnn14_DecisionLevelMax_mAP=0.385.pth
+    labels: PATH/TO/class_labels_indices.csv
+  beats:
+    source: lpepino/beats_ckpts                                                   # hub: BEATs_iter3_finetuned_on_AS2M_cpt1.pt
+    code_source: https://github.com/microsoft/unilm/tree/master/beats             # BEATs.py, backbone.py, modules.py, quantizer.py
+    dir: PATH/TO/beats                                                            # one folder with the four .py files and the weights
+    weights: BEATs_iter3_finetuned_on_AS2M_cpt1.pt
+  birdnet:                                                                        # bird domain only
+    source: justinchuby/BirdNET-onnx                                              # hub: birdnet.onnx; then python -m l2r.checkpoints --birdnet-export
+    onnx: PATH/TO/birdnet_emb.onnx                                                # written by the export next to birdnet.onnx
+
+# Transcription (Whisper reads 30 s per window).
+asr:
+  max_new_tokens: 256
+  max_windows: 6
+
+# Inference: how the router's outputs become served nodes (Appendix "Router inference").
+serve:
+  hop: 1.5                          # 3 s chunks every 1.5 s
+  # routers in serving order; a later router takes over an attribute an earlier one also predicts
+  routers: [sound, music_clap, music_muq, speech_whisper, speech_emotion, speech_gender, gate, music_labelled]
+  gate_tau: 0.5                     # a region is open at gate probability >= 0.5
+  weak_skill: 0.3                   # attributes with held-out skill below this are served only at confidence >= weak_conf
+  weak_conf: 0.5
+  always: [speech.emotion, music.production, music.mood, music.vocals, music.fidelity]     # exempt from the skill rule
+  multi_threshold: {music.instrument: 0.3, music.vocal_style: 0.3}    # multiple-choice attributes (default 0.5)
+  top_k: 3                          # at most this many leaves / classes where several are served ...
+  top_threshold: 0.2                # ... each with at least this probability
+  top_leaves: [music.instrument]    # multiple-choice attributes that serve up to top_k leaves per class
+  top_classes: [speech.emotion]     # single-choice attributes that serve up to top_k classes
+  # attributes scored on every 3 s chunk although their heads were trained per clip or on 10 s chunks
+  per_chunk: [music.melody, speech.age_group, speech.gender, music.instrument, music.vocals]
+  replaced_by_sound_heads: [sound.event, sound.activity]   # trained with the sound router, served by the sound-identity heads instead
+  language_from_transcript: true
+  language_min: 0.5
+  music_property_heads: true
+  music_property_threshold: 0.5
+  sound_heads: true
+  sound_classes: 2                  # per sound-identity attribute: top classes ...
+  sound_leaves: 2                   # ... and top leaves of each
+  sound_context_attributes: [sound.activity, sound.environment]      # not served through the question fallback
+  question_fallback: 0.5            # question-classifier probability that opens the sound heads when no chunk heard sound
+  domain_none: 0.995                # a new-domain head abstains only when p(none) >= this
+
+# A new domain (python -m l2r.adapt): one attribute, one head on a frozen encoder, k labelled clips per class.
+adapt:
+  encoder: {birds: birdnet, marine: clap}
+  layers: 1
+  lr: 1.0e-3
+  balanced: 0.5
+  min_clips: 5
+  val_frac: 0
+  epochs: 40
+  steps: 200
+
+# Reader: answer = argmax over letters of  log p(letter | context, question) + beta * log p(letter | question).
+reader:
+  beta: 0.1
+
+# The routers: attributes that share a frozen encoder are trained together (l2r/router/train.py).
+#   sets        label sets the router is trained on; "set:attr1+attr2" takes only these attributes from a set
+#   layers      depth of the body          balanced   share of a batch drawn class-balanced
+#   min_clips   a leaf becomes a node with at least this many training clips
+routers:
+  gate:
+    encoder: clap
+    regions: [cross]
+    attributes: [cross.families_present]
+    lr: 3.0e-4
+    layers: 2
+    balanced: 0.5
+    min_clips: 5
+    epochs: 80
+    steps: 400
+  sound:
+    encoder: clap
+    regions: [sound]
+    attributes: [sound.action_material, sound.activity, sound.event, sound.proximity, sound.scene]
+    lr: 3.0e-4
+    layers: 1
+    balanced: 0.3
+    min_clips: 5
+    epochs: 60
+    steps: 400
+  music_clap:
+    encoder: clap
+    regions: [music]
+    attributes: [music.ensemble_size, music.genre, music.mode, music.mood, music.production]
+    lr: 1.0e-3
+    layers: 2
+    balanced: 0.3
+    min_clips: 5
+    epochs: 60
+    steps: 400
+  music_muq:
+    encoder: muq_mulan
+    regions: [music]
+    attributes: [music.era_culture, music.instrument, music.melody, music.meter, music.tempo, music.texture, music.vocals]
+    lr: 1.0e-3
+    layers: 2
+    balanced: 0.3
+    min_clips: 5
+    epochs: 60
+    steps: 400
+  music_labelled:                 # human labels (MusicCaps descriptors, IRMAS) next to the pool's labels
+    encoder: clap
+    regions: [music]
+    attributes: [music.instrument, music.vocals, music.mood, music.production, music.fidelity, music.vocal_style]
+    sets: "pool:music.instrument+music.vocals+music.mood+music.production,musiccaps"
+    lr: 1.0e-3
+    layers: 1
+    balanced: 0.3
+    min_clips: 5
+    epochs: 8
+    steps: 200
+    label_smooth: 0.1
+  speech_whisper:
+    encoder: whisper
+    regions: [speech]
+    attributes: [speech.age_group, speech.language, speech.num_speakers, speech.speaking_style]
+    lr: 3.0e-4
+    layers: 2
+    balanced: 0.3
+    min_clips: 5
+    epochs: 60
+    steps: 400
+  speech_emotion:
+    encoder: emotion2vec
+    regions: [speech]
+    attributes: [speech.emotion]
+    lr: 1.0e-3
+    layers: 3
+    balanced: 0.5
+    min_clips: 3
+    epochs: 80
+    steps: 600
+  speech_gender:
+    encoder: wavlm_sv
+    regions: [speech]
+    attributes: [speech.gender]
+    lr: 1.0e-3
+    layers: 3
+    balanced: 0.5
+    min_clips: 3
+    epochs: 80
+    steps: 600

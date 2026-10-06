@@ -1,0 +1,161 @@
+# Classes of the identity attributes of environmental sound.
+#
+# Each class is an AudioSet class or a small union of them (`audioset` = its root classes in the AudioSet ontology). An AudioSet class is
+# placed under the class whose root is its nearest ontology ancestor (`l2r.tree.sound`). The kinds below become the identity attributes
+# (`machine or vehicle` is split into the attributes vehicle and machine).
+# `esc50_to_audioset`: ESC-50 category -> AudioSet class, for clips labelled with ESC-50 categories; unmapped categories are not used.
+
+kinds:
+  animal:
+    - {name: dog, audioset: [Dog]}
+    - {name: cat, audioset: [Cat]}
+    - {name: horse, audioset: [Horse]}
+    - {name: donkey, audioset: ["Donkey, ass"]}
+    - {name: cattle, audioset: ["Cattle, bovinae"]}
+    - {name: pig, audioset: [Pig]}
+    - {name: goat, audioset: [Goat]}
+    - {name: sheep, audioset: [Sheep]}
+    - {name: fowl, audioset: [Fowl]}
+    - {name: bird, audioset: [Bird]}
+    - {name: insect, audioset: [Insect]}
+    - {name: frog, audioset: [Frog]}
+    - {name: snake, audioset: [Snake]}
+    - {name: rodent, audioset: ["Rodents, rats, mice"]}
+    - {name: roaring big cat, audioset: ["Roaring cats (lions, tigers)"]}
+    - {name: whale vocalization, audioset: [Whale vocalization]}
+    - {name: wild canid, audioset: ["Canidae, dogs, wolves"]}
+  machine or vehicle:
+    - {name: car, audioset: [Car]}
+    - {name: truck, audioset: [Truck]}
+    - {name: bus, audioset: [Bus]}
+    - {name: emergency vehicle, audioset: [Emergency vehicle]}
+    - {name: motorcycle, audioset: [Motorcycle]}
+    - {name: traffic noise, audioset: ["Traffic noise, roadway noise"]}
+    - {name: rail transport, audioset: [Rail transport]}
+    - {name: aircraft, audioset: [Aircraft]}
+    - {name: boat, audioset: ["Boat, Water vehicle"]}
+    - {name: non-motorized vehicle, audioset: [Non-motorized land vehicle]}
+    - {name: engine, audioset: [Engine]}
+    - {name: mechanisms, audioset: [Mechanisms]}
+  tool:
+    - {name: hammer, audioset: [Hammer]}
+    - {name: jackhammer, audioset: [Jackhammer]}
+    - {name: sawing, audioset: [Sawing]}
+    - {name: filing, audioset: ["Filing (rasp)"]}
+    - {name: sanding, audioset: [Sanding]}
+    - {name: power tool, audioset: [Power tool]}
+  household object:
+    - {name: door, audioset: [Door]}
+    - {name: cupboard or drawer, audioset: [Cupboard open or close, Drawer open or close]}
+    - {name: dishes, audioset: ["Dishes, pots, and pans"]}
+    - {name: cutlery, audioset: ["Cutlery, silverware"]}
+    - {name: chopping food, audioset: ["Chopping (food)"]}
+    - {name: frying food, audioset: ["Frying (food)"]}
+    - {name: microwave oven, audioset: [Microwave oven]}
+    - {name: blender, audioset: [Blender]}
+    - {name: kettle whistle, audioset: [Kettle whistle]}
+    - {name: tap or sink, audioset: ["Water tap, faucet", "Sink (filling or washing)", "Bathtub (filling or washing)"]}
+    - {name: hair dryer, audioset: [Hair dryer]}
+    - {name: toilet flush, audioset: [Toilet flush]}
+    - {name: toothbrush, audioset: [Toothbrush]}
+    - {name: vacuum cleaner, audioset: [Vacuum cleaner]}
+    - {name: zipper, audioset: ["Zipper (clothing)"]}
+    - {name: keys jangling, audioset: [Keys jangling]}
+    - {name: coin dropping, audioset: ["Coin (dropping)"]}
+    - {name: scissors, audioset: [Scissors]}
+    - {name: electric shaver, audioset: ["Electric shaver, electric razor"]}
+    - {name: shuffling cards, audioset: [Shuffling cards]}
+    - {name: typing, audioset: [Typing]}
+    - {name: writing, audioset: [Writing]}
+  human non-speech:
+    - {name: laughter, audioset: [Laughter]}
+    - {name: crying, audioset: ["Crying, sobbing"]}
+    - {name: cough, audioset: [Cough]}
+    - {name: sneeze, audioset: [Sneeze]}
+    - {name: breathing, audioset: [Breathing]}
+    - {name: footsteps, audioset: [Human locomotion]}
+    - {name: clapping, audioset: [Clapping]}
+    - {name: applause, audioset: [Applause]}
+    - {name: cheering, audioset: [Cheering]}
+    - {name: crowd, audioset: [Crowd]}
+    - {name: chatter, audioset: [Chatter]}
+    - {name: whistling, audioset: [Whistling]}
+    - {name: chewing, audioset: ["Chewing, mastication"]}
+    - {name: screaming, audioset: [Screaming]}
+    - {name: children playing, audioset: [Children playing]}
+    - {name: heartbeat, audioset: ["Heart sounds, heartbeat"]}
+    - {name: digestive, audioset: [Digestive]}
+  natural element:
+    - {name: wind, audioset: [Wind]}
+    - {name: thunderstorm, audioset: [Thunderstorm]}
+    - {name: water, audioset: [Water]}
+    - {name: fire, audioset: [Fire]}
+  alarm or signal:
+    - {name: telephone, audioset: [Telephone]}
+    - {name: alarm clock, audioset: [Alarm clock]}
+    - {name: siren, audioset: [Siren]}
+    - {name: doorbell, audioset: [Doorbell]}
+    - {name: buzzer, audioset: [Buzzer]}
+    - {name: smoke or fire alarm, audioset: ["Smoke detector, smoke alarm", Fire alarm]}
+    - {name: car alarm, audioset: [Car alarm]}
+    - {name: vehicle horn, audioset: ["Vehicle horn, car horn, honking", "Air horn, truck horn", Foghorn]}
+    - {name: bicycle bell, audioset: [Bicycle bell]}
+    - {name: whistle, audioset: [Whistle]}
+    - {name: bell, audioset: [Bell]}
+    - {name: beep, audioset: ["Beep, bleep"]}
+  impact or texture:
+    - {name: generic impact, audioset: [Generic impact sounds]}
+    - {name: surface contact, audioset: [Surface contact]}
+    - {name: glass, audioset: [Glass]}
+    - {name: wood, audioset: [Wood]}
+    - {name: liquid, audioset: [Liquid]}
+    - {name: explosion or gunshot, audioset: [Explosion]}
+    - {name: specific impact, audioset: [Specific impact sounds]}
+
+esc50_to_audioset:
+  dog: Dog
+  rooster: "Chicken, rooster"
+  pig: Pig
+  cow: "Cattle, bovinae"
+  frog: Frog
+  cat: Cat
+  hen: "Chicken, rooster"
+  insects: Insect
+  sheep: Sheep
+  crow: Crow
+  rain: Rain
+  sea_waves: "Waves, surf"
+  crackling_fire: Fire
+  crickets: Cricket
+  chirping_birds: "Chirp, tweet"
+  water_drops: Drip
+  wind: Wind
+  pouring_water: Pour
+  toilet_flush: Toilet flush
+  thunderstorm: Thunderstorm
+  crying_baby: "Baby cry, infant cry"
+  sneezing: Sneeze
+  clapping: Clapping
+  breathing: Breathing
+  coughing: Cough
+  footsteps: "Walk, footsteps"
+  laughing: Laughter
+  brushing_teeth: Toothbrush
+  snoring: Snoring
+  door_wood_knock: Knock
+  keyboard_typing: Computer keyboard
+  door_wood_creaks: Door
+  vacuum_cleaner: Vacuum cleaner
+  clock_alarm: Alarm clock
+  clock_tick: Tick
+  glass_breaking: Shatter
+  helicopter: Helicopter
+  chainsaw: Chainsaw
+  siren: Siren
+  car_horn: "Vehicle horn, car horn, honking"
+  engine: Engine
+  train: Train
+  church_bells: Church bell
+  airplane: "Fixed-wing aircraft, airplane"
+  fireworks: Fireworks
+  hand_saw: Sawing
