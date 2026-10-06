@@ -2,7 +2,7 @@
 
 Code for the paper *LISTEN-to-Reason: Listen with Experts, Retrieve over a Graph, Reason with LLMs*.
 
-- 🌐 **Project page** : https://poonehmousavi.github.io/listen-to-reason-demo/
+- 🌐 **Project page** : https://poonehmousavi.github.io/listen-to-reason/
 - 🤗 **Checkpoints** — the tree and the trained heads: https://huggingface.co/poonehmousavi/listen-to-reason
 - 📄 **Paper** — preprint link to come
 
@@ -182,6 +182,21 @@ A context looks like this:
 Audio analysis of the recording:
 Audio graph nodes matched to this recording: cross families present: speech present, environmental sound present; speech gender: female voice; sound animal: dog (Bark).
 Transcript: "[0:00.0] Would you like some candy?"
+```
+
+### One clip
+
+```bash
+python -m l2r.retrieve.clip --audio clip.wav                                   # nodes per chunk and the context
+python -m l2r.retrieve.clip --audio clip.wav --question "Who calls the dog?" --options "a man" "a woman" "a child" --answer
+```
+
+```python
+from l2r.retrieve import clip
+r = clip.describe("clip.wav", question="Who calls the dog?", options=["a man", "a woman", "a child"])
+r["context"]      # the text the reader receives
+r["trace"]        # every served node with its chunk span and probability
+clip.answer(r)    # {"answer": "b", "option": "a woman", "without_context": "a", "model": "Qwen/Qwen2.5-7B-Instruct"}
 ```
 
 ## 5. 🧠 Reasoning — `python -m l2r.reason`
