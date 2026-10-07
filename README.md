@@ -2,10 +2,6 @@
 
 Code for the paper *LISTEN-to-Reason: Listen with Experts, Retrieve over a Graph, Reason with LLMs*.
 
-- 🌐 **Project page** : https://poonehmousavi.github.io/listen-to-reason/
-- 🤗 **Checkpoints** — the tree and the trained heads: https://huggingface.co/poonehmousavi/listen-to-reason
-- 📄 **Paper** — preprint link to come
-
 L2R passes audio to a text LLM through an explicit, human-readable tree. Small heads on frozen expert encoders map
 each chunk of a clip to nodes of the tree (speech, music, environmental sound). A frozen text-only LLM answers from
 these nodes and a transcript; it never hears the clip. Every answer can be traced to the nodes it read, any LLM can
@@ -236,18 +232,3 @@ python -m baselines.qlora --domain birds --k 5 --epochs 8               # the au
 python -m baselines.audio_llm --benchmark birds --adapter work/qlora/birds_k5
 python -m baselines.in_context --domain birds --shots 0,1,3,5           # the same clips as in-context examples
 ```
-
-## 📚 Citation
-
-```bibtex
-@article{mousavi2026listen,
-  title   = {LISTEN-to-Reason: Listen with Experts, Retrieve over a Graph, Reason with LLMs},
-  author  = {Mousavi, Pooneh and others},
-  journal = {Preprint},
-  year    = {2026}
-}
-```
-
-## ✉️ Contact
-
-Questions or problems: mousavi dot pooneh at gmail dot com.
