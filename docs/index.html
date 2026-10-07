@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>html,body{margin:0;padding:0}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>Listen-to-Reason</title>
+<title>LISTEN-to-Reason</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,500;1,400&display=swap">
@@ -136,13 +136,18 @@ h2{font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:var(--so
 .site > section:first-child{border-top:0}
 .hero{padding-block:44px 20px}
 .hero h1{font-family:"IBM Plex Serif",Georgia,serif; font-weight:500; font-size:clamp(30px,5vw,50px); line-height:1.08; margin:0; text-wrap:balance}
-.hero h1 em{font-style:italic; color:var(--teal)}
+.hero h1 em{font-style:normal; font-weight:600; color:var(--teal)} .hero h1 em.kl{color:var(--teal)} .hero h1 em.kr{color:var(--violet)} .hero h1 em.ko{color:var(--burnt)}
 .hero .sub{font-size:clamp(17px,2.2vw,21px); color:var(--soft); margin:0; max-width:62ch; text-wrap:balance}
 .anon{font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); margin:0}
 .links{display:flex; flex-wrap:wrap; gap:10px}
 .links a{font-weight:600; font-size:14px; text-decoration:none; color:var(--ink); border:1px solid var(--soft); border-radius:6px; padding:6px 14px}
 .links a:hover{border-color:var(--teal); color:var(--teal)}
 .links a.off{color:var(--soft); border-style:dashed; pointer-events:none}
+.links{gap:14px 26px; align-items:center} .lgrp{display:flex; flex-wrap:wrap; gap:10px}
+.links a.cta{font-size:15.5px; padding:10px 20px; border:2px solid var(--teal); background:var(--teal); color:var(--panel); border-radius:8px}
+.links a.cta:hover{filter:brightness(1.12); color:var(--panel)}
+.links a.cta.alt{background:var(--violet); border-color:var(--violet)}
+
 .facts{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin-top:6px}
 .fact{border-top:2px solid var(--teal); padding-top:8px}
 .fact b{display:block; font-size:22px; font-variant-numeric:tabular-nums}
@@ -255,10 +260,9 @@ h2{font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:var(--so
 <body>
 <div class="site">
 <section class="hero" id="top">
-  <p class="anon">Preprint · 2026</p>
-  <h1>Listen-to-Reason: <em>Hear with Experts</em>, Think with LLM</h1>
-  <p class="sub">Frozen expert audio encoders and small trained heads place every 3-second chunk of a clip in an explicit tree of named audio nodes. A frozen text-only LLM answers from those nodes and a transcript. It never hears the audio, and every answer can be traced to the nodes it read.</p>
-  <div class="links"><a class="off" href="#top">Paper (soon)</a><a href="https://github.com/poonehmousavi/listen-to-reason">Code</a><a href="https://huggingface.co/poonehmousavi/listen-to-reason">Checkpoints</a><a href="#examples">Explore examples</a><a href="#tree">Browse the tree</a></div>
+  <h1>LISTEN-to-Reason: <em class="kl">Listen</em> with Experts, <em class="kr">Retrieve</em> over a Graph, <em class="ko">Reason</em> with LLMs</h1>
+  <p class="sub">Listen-to-Reason (L2R) is an interpretable-by-design pipeline that passes audio to the LLM through an explicit, human-readable tree: small heads on frozen expert encoders map each chunk of a clip to semantically meaningful nodes on the tree (for speech, music and environmental sound), and a frozen text-only LLM answers from these nodes and an ASR transcript without hearing the clip. Every answer can therefore be traced to the nodes and transcript it read.</p>
+  <div class="links"><div class="lgrp"><a class="cta" href="#examples">Explore examples &#8594;</a><a class="cta alt" href="#tree">Browse the tree &#8594;</a></div><div class="lgrp"><a class="off" href="#top">Paper</a><a href="https://github.com/poonehmousavi/listen-to-reason" target="_blank" rel="noopener">Code</a><a href="https://huggingface.co/poonehmousavi/listen-to-reason" target="_blank" rel="noopener">Checkpoints</a></div></div>
   <div class="facts">
     <div class="fact"><b>39 attributes · 363 values · 668 leaves</b><span>in the audio tree, over speech, music and environmental sound</span></div>
     <div class="fact"><b>7.7M trained parameters</b><span>small heads on frozen encoders; the reader LLM is never fine-tuned</span></div>
